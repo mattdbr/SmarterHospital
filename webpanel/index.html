@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- css libraries -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+	<p>Click the button to turn on and off the LED.</p>
+
+	<!-- radio buttons that help us control LED intensity -->
+	<form id="LED_Selection" action="">
+		<!-- To be upgraded to slider... eventually -->
+		<input type="radio" name="LEDCheck" value="on" id="off" />
+		<label for="off">LED Off</label><br>
+		<input type="radio" name="LEDCheck" value="off" id="half" />
+		<label for="off">LED 1/2 Brightness</label><br>		
+		<input type="radio" name="LEDCheck" value="off" id="on" />
+		<label for="off">LED On</label><br>
+	</form>
+	<br>
+	
+	<h2>Is patient in bed?</h2>
+	<div id="inBed"></div>
+	
+	<h2>Heartrate</h2>
+	<div id="heartrate"></div>
+	
+	<div id="sensor_content">Loading data from Arduino...</div>
+	<div id="LED_content"></div>
+	<div id="LED_content_test"></div>
+	
+	<!-- js libraries -->
+	<script src="js/hospital.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery-3.2.1.min.js"></script>
+
+</body>
+
+</html>
