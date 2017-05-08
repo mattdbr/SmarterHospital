@@ -27,5 +27,5 @@ function getSensorvalue() {
 	$('#inBed').load('/arduino/onbed);
 	$('#heartrate').load('/arduino/heartrate);
 	
-	setTimeout("getSensorvalue()",1000); //Poll every one seconds.
+	setTimeout("getSensorvalue()",1000); //Poll every one seconds. Lower = less real time but lower power consumption
 }
