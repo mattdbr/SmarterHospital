@@ -37,14 +37,21 @@ void loop() {
     // is "temperature" command?
     if (command == "onbed") {
       onBed(client);
-    }else if (command == "heartrate"){
+    }
+	if (command == "heartrate"){
 	  heartRate(client);
 	}
 	
 	/*   Lighting api should be url/light/value ? 
-	else if (command == "light"){
-      light(client);
+	if (command == "nolight"){
+		analogWrite(11, 0);
+	}
+	if (command == "halflight"){
+      analogWrite(11, 120);
     }
+	if (command == "fulllight"){
+		analogWrite(11, 255);
+	}
 	
 	*/
 
@@ -57,13 +64,19 @@ void loop() {
 }
 
 void onBed(BridgeClient client){
-  //is patient on bed?
+  //is patient on bed? 4.9V --> 100N
+  int value = analogRead(A1);
+  float voltage = value*(5.0/1023.0);
+  if (voltage > 4.9){
+	  client.print(F("Bed occupied"));
+    client.print(voltage);
+  }else{
+	  client.print(F("Bed not occupied"));
+    client.print(voltage);
+  }
 
 }
 void heartRate(BridgeClient client){
+	//
 }
 
-void light(BridgeClient client){
-	value = client.parseInt();
-    digitalWrite(12, value);
-}
