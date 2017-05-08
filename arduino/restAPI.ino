@@ -43,7 +43,7 @@ void loop() {
 	
 	/*   Lighting api should be url/light/value ? 
 	else if (command == "light"){
-      client.print(""); 
+      light(client);
     }
 	
 	*/
@@ -63,4 +63,7 @@ void onBed(BridgeClient client){
 void heartRate(BridgeClient client){
 }
 
-void 
+void light(BridgeClient client){
+	value = client.parseInt();
+    digitalWrite(12, value);
+}
