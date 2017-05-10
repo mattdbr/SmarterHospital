@@ -7,11 +7,12 @@
 </head>
 <body>
 
-	<p>Click the button to turn on and off the LED.</p>
+	<p>Slide to control light brightness:</p>
 
 	<!-- radio buttons that help us control LED intensity -->
+	<!-- 
 	<form id="LED_Selection" action="">
-		<!-- To be upgraded to slider... eventually -->
+		 To be upgraded to slider... eventually
 		<input type="radio" name="LEDCheck" value="off" id="off" />
 		<label for="off">LED Off</label>
 		<input type="radio" name="LEDCheck" value="off" id="half" />
@@ -19,21 +20,35 @@
 		<input type="radio" name="LEDCheck" value="off" id="on" />
 		<label for="off">LED On</label>
 	</form>
+	-->
+	
+	
+	<!-- Sample slider... needs a bit of work -->
+	<div class="range-slider">
+	<input class="range-slider__range" type="range" value="0" min="0" max="255">
+	<span class="range-slider__value"></span>
+	</div>
+	
+	<br>
+	<button id = "submit" type = "button">Submit</button>
+	<br>
 	<br>
 	
-	<h2>Is patient in bed?</h2>
+	<div>Lighting Status: </div>
+	<div id="LED_content"></div>
+	
+	
+	<h2>Patient is </h2>
 	<div id="inBed"></div>
 	
-	<h2>Heartrate</h2>
+	<h2>Heartrate: </h2>
 	<div id="heartrate"></div>
 	
-	<div id="sensor_content">Loading data from Arduino...</div>
-	<div id="LED_content"></div>
+	<!-- <div id="sensor_content">Loading data from Arduino...</div> --> 
+	
 	<div id="LED_content_test"></div>
 	
-	<!-- <button id = "#btn" type = "button">Refresh</button>
-		For when we selectively refresh
-	-->
+	<!--For if we want to selectively refresh -- I think that automatic is better-->
 	
 	<!-- js libraries -->
 	<script src="js/jquery-3.2.1.min.js"></script>
@@ -41,6 +56,5 @@
 	<script src="js/bootstrap.min.js"></script>
 	
 
-</body>
-
+	</body>
 </html>

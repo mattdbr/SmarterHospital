@@ -7,7 +7,8 @@
 BridgeServer server;
 String startString;
 long hits = 0;
-void motoron(BridgeClient client);
+void onBed(BridgeClient client);
+void heartRate(BridgeClient client);
 void setup() {
   SerialUSB.begin(9600);
 
@@ -42,7 +43,7 @@ void loop() {
 	  heartRate(client);
 	}
 	
-	/*   Lighting api should be url/light/value ? 
+	/*   Lighting api should be url/light/value ? TODO: Matt */
 	if (command == "nolight"){
 		analogWrite(11, 0);
 	}
@@ -52,8 +53,6 @@ void loop() {
 	if (command == "fulllight"){
 		analogWrite(11, 255);
 	}
-	
-	*/
 
     // Close connection and free resources.
     client.stop();
@@ -63,7 +62,7 @@ void loop() {
   delay(50); // Poll every 50ms
 }
 
-void onBed(BridgeClient client){
+void onBed(BridgeClient client){ //TODO: Josh
   //is patient on bed? 4.9V --> 100N
   int value = analogRead(A1);
   float voltage = value*(5.0/1023.0);
@@ -71,12 +70,12 @@ void onBed(BridgeClient client){
 	  client.print(F("Bed occupied"));
     client.print(voltage);
   }else{
-	  client.print(F("Bed not occupied"));
+	  client.print(F("Bed not occupied")); //This result can be inserted directly into webpage
     client.print(voltage);
   }
 
 }
-void heartRate(BridgeClient client){
-	//
+void heartRate(BridgeClient client){ //TODO: Isheeta
+	//heartrate calcs
 }
 
