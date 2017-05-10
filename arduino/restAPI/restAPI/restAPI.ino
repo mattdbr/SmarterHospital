@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include <Bridge.h>
 #include <BridgeServer.h>
 #include <BridgeClient.h>
@@ -44,10 +46,10 @@ void loop() {
 	  if (command == "heartrate"){
 	    heartRate(client);
 	  }
-
+	
   	/*   Lighting api should be url/light/value ? TODO: Matt */
   	if (command == "light"){
-      light(client);
+      light(client);  
   	}
   }
 
@@ -75,3 +77,4 @@ void light(BridgeClient client){
   int value = client.parseInt();
   analogWrite(light, value);
 }
+
