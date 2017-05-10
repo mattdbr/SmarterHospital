@@ -18,7 +18,9 @@ void setup() {
   Bridge.begin();
   digitalWrite(13, HIGH);
 
-  pinMode(6, OUTPUT);
+  //for lights
+  int light = 6;
+  pinMode(light, OUTPUT);
   // Listen for incoming connection only from localhost
   // (no one from the external network could connect)
   server.listenOnLocalhost();
@@ -39,27 +41,17 @@ void loop() {
     if (command == "onbed") {
       onBed(client);
     }
-	if (command == "heartrate"){
-	  heartRate(client);
-	}
+	  if (command == "heartrate"){
+	    heartRate(client);
+	  }
 	
-	/*   Lighting api should be url/light/value ? TODO: Matt */
-	if (command == "nolight"){
-		analogWrite(11, 0);
-	}
-	if (command == "halflight"){
-      analogWrite(11, 120);
-    }
-	if (command == "fulllight"){
-		analogWrite(11, 255);
-	}
-
-    // Close connection and free resources.
-    client.stop();
-    hits++;
+  	/*   Lighting api should be url/light/value ? TODO: Matt */
+  	if (command == "light"){
+      light(client);  
+  	}
   }
 
-  delay(50); // Poll every 50ms
+    delay(50); // Poll every 50ms
 }
 
 void onBed(BridgeClient client){ //TODO: Josh
@@ -77,5 +69,10 @@ void onBed(BridgeClient client){ //TODO: Josh
 }
 void heartRate(BridgeClient client){ //TODO: Isheeta
 	//heartrate calcs
+}
+
+void light(BridgeClient client){
+  int value = client.parseInt();
+  analogWrite(light, value);
 }
 
