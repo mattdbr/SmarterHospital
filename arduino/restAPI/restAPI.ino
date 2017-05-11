@@ -7,8 +7,15 @@
 BridgeServer server;
 String startString;
 long hits = 0;
+int lightpin = 6;
+
+int fsrPin = A1;     // the FSR and 10K pulldown are connected to a0 
+int fsrthreshold = 800;
+
 void onBed(BridgeClient client);
 void heartRate(BridgeClient client);
+
+
 void setup() {
   SerialUSB.begin(9600);
 
@@ -19,8 +26,11 @@ void setup() {
   digitalWrite(13, HIGH);
 
   //for lights
-  int light = 6;
   pinMode(light, OUTPUT);
+
+  //for FSR
+
+  
   // Listen for incoming connection only from localhost
   // (no one from the external network could connect)
   server.listenOnLocalhost();
@@ -55,16 +65,18 @@ void loop() {
 }
 
 void onBed(BridgeClient client){ //TODO: Josh
-  //is patient on bed? 4.9V --> 100N
-  int value = analogRead(A1);
-  float voltage = value*(5.0/1023.0);
-  if (voltage > 4.9){
-	  client.print(F("Bed occupied"));
-    client.print(voltage);
-  }else{
-	  client.print(F("Bed not occupied")); //This result can be inserted directly into webpage
-    client.print(voltage);
+  int fsrReading = analogRead(fsrPin);  
+ 
+  //Serial.print("Analog reading = ");
+  //Serial.print(fsrReading);     // the raw analog reading
+ 
+  // We'll have a few threshholds, qualitatively determined
+  if (fsrReading < fsrthreshold) {
+    Serial.println("Patient is NOT on bed");
+  } else {
+    Serial.println("Patient is on bed");
   }
+  delay(1000);
 
 }
 void heartRate(BridgeClient client){ //TODO: Isheeta
@@ -73,5 +85,5 @@ void heartRate(BridgeClient client){ //TODO: Isheeta
 
 void light(BridgeClient client){
   int value = client.parseInt();
-  analogWrite(light, value);
+  analogWrite(lightpin, value);
 }
