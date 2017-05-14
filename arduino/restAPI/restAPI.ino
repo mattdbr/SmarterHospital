@@ -14,7 +14,8 @@ int fsrthreshold = 500;
 
 //  Variables
 int pulsePin = A0;                 // Pulse Sensor purple wire connected to analog pin 0
-
+int ledPin = 9;
+  
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
 volatile int Signal;                // holds the incoming raw data
@@ -210,11 +211,14 @@ void heartRate(BridgeClient client) { //TODO: Isheeta
 
 void light(BridgeClient client) {
   int value = client.parseInt();
+  /* for the torch
   analogWrite(lightpin, value);
   analogWrite(lightpin, 0);
   analogWrite(lightpin, 120);
   analogWrite(lightpin, 0);
   analogWrite(lightpin, 120);
   analogWrite(lightpin, 0);
-  analogWrite(lightpin, value);
+  analogWrite(lightpin, value);*/
+  //playing it safe
+  analogWrite(ledPin, value);
 }
