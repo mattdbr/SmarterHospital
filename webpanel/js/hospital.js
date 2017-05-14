@@ -8,7 +8,7 @@ $('#submit').click(function(){
 });
 
 function changelight(){
-	var ip_address = '149.171.143.200';		
+	var ip_address = '149.171.143.150';		
 	var value = $('.range-slider__value').text(); // get value here
 	$('#LED_content').load('http://' + ip_address + '/arduino/light/' + value);
 	console.log(value); //to test slider is working - TODO: Find way to only send if submit is pressed
@@ -35,8 +35,8 @@ function sliderInit() {
 function getSensorvalue() {
 //Every one second, this function obtains sensor values from Arduino Yun and sends to Yun
 //a request to turn LED on or off (depending on what radio button is pressed).
-	var ip_address = '149.171.143.200'; // store IP as a variable to change once on the day
-	var delay = 2000; // change to affect poll interval
+	var ip_address = '149.171.143.150'; // store IP as a variable to change once on the day
+	var delay = 5000; // change to affect poll interval
 	
 	var checked_option_radio = $('input[name=LEDCheck]:checked','#LED_Selection').attr('id'); 
 	//Get the id of the checked radio button
