@@ -136,3 +136,11 @@ input::-moz-focus-inner,
 input::-moz-focus-outer { 
   border: 0; 
 }
+
+img{
+	height:100px;
+	width:200px;
+	display:block;
+	text-align:center;
+	margin:auto;
+}
