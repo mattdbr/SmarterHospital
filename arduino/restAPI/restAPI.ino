@@ -7,14 +7,15 @@
 BridgeServer server;
 String startString;
 long hits = 0;
-int lightpin = 6;
+//int lightpin = 6;
 
 int fsrPin = A2;     // the FSR and 10K pulldown are connected to a0
-int fsrthreshold = 500;
+int fsrthreshold = 200;
+int fsrReading;
 
 //  Variables
 int pulsePin = A0;                 // Pulse Sensor purple wire connected to analog pin 0
-int ledPin = 9;
+int ledPin = 6; //for lights
   
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
@@ -55,7 +56,7 @@ void setup() {
 
   //for Heartrate
 
-  //interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS
+  interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS
   // IF YOU ARE POWERING The Pulse Sensor AT VOLTAGE LESS THAN THE BOARD VOLTAGE,
   // UN-COMMENT THE NEXT LINE AND APPLY THAT VOLTAGE TO THE A-REF PIN
   //   analogReference(EXTERNAL);
@@ -189,7 +190,7 @@ void loop() {
 }
 
 void onBed(BridgeClient client) { //TODO: Josh
-  int fsrReading = analogRead(fsrPin);
+  fsrReading = analogRead(fsrPin);
   // for testing client.print(fsrReading);
 
   //Serial.print("Analog reading = ");
@@ -205,7 +206,11 @@ void onBed(BridgeClient client) { //TODO: Josh
 
 }
 void heartRate(BridgeClient client) { //TODO: Isheeta
-  client.print(lastBPM);
+  if(lastBPM > 170){
+    client.print(0);
+  }else{
+    client.print(lastBPM); 
+  }  
   delay(1000);
 }
 
