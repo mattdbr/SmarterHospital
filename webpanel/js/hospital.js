@@ -1,5 +1,5 @@
 $(function(){
-	sliderInit();
+	//sliderInit();
 	getSensorvalue();
 });
 
@@ -9,13 +9,13 @@ $('#submit').click(function(){
 
 function changelight(){
 	var ip_address = '149.171.143.197';		
-	var value = $('.range-slider__value').text(); // get value here
+	var value = $('.value').text(); // get value here
 	$('#LED_content').load('http://' + ip_address + '/arduino/light/' + value);
 	console.log(value); //to test slider is working - TODO: Find way to only send if submit is pressed
 }
 
 
-function sliderInit() {
+/*function sliderInit() {
 	var slider = $('.range-slider'),
 		range = $('.range-slider__range'),
 		value = $('.range-slider__value');
@@ -30,7 +30,7 @@ function sliderInit() {
 				$(this).next(value).html(this.value);
 			});
 		});
-}
+}*/
 
 function getSensorvalue() {
 //Every one second, this function obtains sensor values from Arduino Yun and sends to Yun
