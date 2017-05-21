@@ -21,7 +21,7 @@ $teal: #1abc9c !default;
 
 body {
   font-family: sans-serif;
-  padding: 60px 20px;
+  padding: 40px 20px;
   
   @media (min-width: 600px) {
     padding: 60px;
@@ -146,6 +146,7 @@ img{
 	display:block;
 	text-align:center;
 	margin:auto;
+	margin-top:-17px;
 }
 
 .btn{
@@ -154,4 +155,12 @@ img{
 
 html{
 	background-color:#f5f5f5;
+}
+
+input[type="range"]{
+	width:500px;
+}
+
+#icon_ac_unit{
+	width:500px;
 }
