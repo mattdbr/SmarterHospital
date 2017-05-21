@@ -141,13 +141,17 @@ input::-moz-focus-outer {
 }
 
 img{
-	height:152px;
-	width:230px;
+	height:98px;
+	width:150px;
 	display:block;
 	text-align:center;
 	margin:auto;
 }
 
-.pulse{
+.btn{
 	margin-right: 10px;
+}
+
+html{
+	background-color:#f5f5f5;
 }
