@@ -58,6 +58,7 @@ function getSensorvalue() {
 	$('.temperature').load('http://'+ ip_address + '/arduino/temperature');
 	$('#inBed').load('http://'+ ip_address + '/arduino/onbed'); //TODO: If not in bed, set in red. API should return "in bed" or "not in bed"
 	$('#heartrate').load('http://' + ip_address+ '/arduino/heartrate'); //TODO: If bad, set in red
+	$('.lighting').load('http://' + ip_address+ '/arduino/light');
 	
 	var value = $('.validate').text(); // get value here
 	var temp = $('.temperature').text();
