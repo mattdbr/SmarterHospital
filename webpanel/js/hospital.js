@@ -20,6 +20,14 @@ $('#temp-submit').click(function(){
     changetemp();
 });
 
+$('#pushbullet-submit').click(function(){
+    addpushbullet();
+});
+
+$('#pushover-submit').click(function(){
+    addpushover();
+});
+
 var ip_address = '149.171.143.209'; //global as we need to access it in a lot of places
 var adjusting_temp = false;
 var temp_mode = 3; // 1 = fan 2 = heat 3 = off. Used to prevent excessive API calls.
@@ -108,4 +116,10 @@ function pushbullet(){
 	var res = PushBullet.push("note", "ujyMueYTCMKsjz1Wd4g64y", null, {title: "You suck", body: "Big ass"});
 	var res = PushBullet.devices();
 	console.log(res);
+}
+
+function addpushbullet(){
+}
+
+function addpushover(){
 }
