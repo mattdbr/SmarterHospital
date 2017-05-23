@@ -7,17 +7,20 @@ $(document).ready(function(){
 $(function(){
 	//sliderInit();
 	getSensorvalue();
+	getTemp();
 });
 
 $('#light-submit').click(function(){
     changelight();
+	pushover();
+	pushbullet();
 });
 
 $('#temp-submit').click(function(){
     changetemp();
 });
 
-var ip_address = '149.171.143.197'; //global as we need to access it in a lot of places
+var ip_address = '149.171.143.209'; //global as we need to access it in a lot of places
 var adjusting_temp = false;
 var temp_mode = 3; // 1 = fan 2 = heat 3 = off. Used to prevent excessive API calls.
 
@@ -55,12 +58,11 @@ function getSensorvalue() {
 //a request to turn LED on or off (depending on what radio button is pressed).
 	var delay = 5000; // change to affect poll interval
 	
-	$('.temperature').load('http://'+ ip_address + '/arduino/temperature');
 	$('#inBed').load('http://'+ ip_address + '/arduino/onbed'); //TODO: If not in bed, set in red. API should return "in bed" or "not in bed"
 	$('#heartrate').load('http://' + ip_address+ '/arduino/heartrate'); //TODO: If bad, set in red
-	$('.lighting').load('http://' + ip_address+ '/arduino/light');
+	$('.lighting').load('http://' + ip_address+ '/arduino/lightstatus');
 	
-	var value = $('.validate').text(); // get value here
+	// var value = $('.validate').text(); // get value here
 	var temp = $('.temperature').text();
 	if(adjusting_temp){
 		if(temp > value + 1 && temp_mode != 1){
@@ -79,5 +81,31 @@ function getSensorvalue() {
 	setTimeout("getSensorvalue()", delay); //Wait... Lower = less real time but lower power consumption. Tradeoff we've got to calculate. 
 }
 
+function getTemp() {
+	$('.temperature').load('http://'+ ip_address + '/arduino/temp');
+	setTimeout("getTemp()", 20000); //Wait... Lower = less real time but lower power consumption. Tradeoff we've got to calculate. 
+}
 
+function pushover(){
+	var client1 = new PushoverJs('adz8d4pqpc468uyp4u87m85er8qgq7', 'Q3OrKkArcluCfdWYz5kYp8jJEZA9jD'); //api token then user token
 
+	client1.createMessage()
+	  .title('Patient has got up!')
+	  .message('Patient has got up')
+	  .url('http://www.mattydb.com/uni', 'Web Panel')
+	  .highPriority()
+	  .addCurrentTime()
+	  .playSound(client1.sounds.pushover)
+	  .send();
+
+	setTimeout(function () {
+	  console.log('hrere');
+	}, 4000);
+}
+
+function pushbullet(){
+	PushBullet.APIKey = "o.kk9TUjrvpt4kJMhYtmJ2QIEnGCr1kq2c";
+	var res = PushBullet.push("note", "ujyMueYTCMKsjz1Wd4g64y", null, {title: "You suck", body: "Big ass"});
+	var res = PushBullet.devices();
+	console.log(res);
+}

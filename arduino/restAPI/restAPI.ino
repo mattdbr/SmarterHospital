@@ -9,13 +9,18 @@ String startString;
 long hits = 0;
 //int lightpin = 6;
 
-int fsrPin = A2;     // the FSR and 10K pulldown are connected to a0
-int fsrthreshold = 200;
-int fsrReading;
+
 
 //  Variables
 int pulsePin = A0;                 // Pulse Sensor purple wire connected to analog pin 0
-int ledPin = 6; //for lights
+int ledPin = 6;                   //for lights
+int fanPin = 12;
+int heatPin = 9;
+int tempPin = A3;
+int fsrPin = A2;                   // the FSR and 10K pulldown are connected to a0
+int fsrthreshold = 200;
+int fsrReading;
+int lightSensor = A4;
   
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
@@ -42,11 +47,13 @@ void heartRate(BridgeClient client);
 
 void setup() {
   SerialUSB.begin(9600);
+  Bridge.begin();
 
   // Bridge startup
   pinMode(13, OUTPUT);
+  pinMode(fanPin, OUTPUT);
+  pinMode(heatPin, OUTPUT);
   digitalWrite(13, LOW);
-  Bridge.begin();
   digitalWrite(13, HIGH);
 
   //for lights
@@ -175,16 +182,30 @@ void loop() {
     if (command == "onbed") {
       onBed(client);
     }
-    if (command == "heartrate") {
+	if (command == "heartrate") {
       heartRate(client);
     }
-
-    /*   Lighting api should be url/light/value ? TODO: Matt */
-    if (command == "light") {
+	if (command == "light") {    //Lighting api should be url/light/value 
       light(client);
     }
+	if (command == "fan"){
+      cooling(client);
+    }
+	if (command == "heat"){
+      heating(client);
+    }
+	if (command == "off"){
+      turnTempOff(client);
+    }
+	if (command == "temp"){
+      currentTemp(client);
+    }
+  if (command == "lightstatus"){
+     readLight(client);
+  }
     client.stop();
   }
+  
 
   delay(50); // Poll every 50ms
 }
@@ -226,4 +247,38 @@ void light(BridgeClient client) {
   analogWrite(lightpin, value);*/
   //playing it safe
   analogWrite(ledPin, value);
+}
+
+void cooling(BridgeClient client){
+    int reading = client.parseInt();
+    digitalWrite(heatPin, LOW);
+    analogWrite(fanPin, reading);
+    client.print(F("Fan on"));
+}
+
+void heating(BridgeClient client){
+    analogWrite(fanPin, 0);
+    digitalWrite(heatPin, HIGH);
+    client.print(F("Heater on"));
+}
+
+void currentTemp(BridgeClient client){
+  int sensorValue = analogRead(tempPin);
+  float voltage = sensorValue * (5000.0f / 1024.0f);
+  float temperature = (voltage - 500.0f) / 10.0f;
+  
+  client.print(temperature); 
+}
+
+void turnTempOff(BridgeClient client){  
+   analogWrite(fanPin, 0);
+   digitalWrite(heatPin, LOW);
+   client.print("Nothing on"); 
+}
+
+void readLight(BridgeClient client){
+  
+  float value = analogRead(lightSensor);
+  float light = value*(255.0/1023.0);
+  client.print(value);  
 }
