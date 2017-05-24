@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>G1 Health Web Panel</title>
-	
+	<meta charset="utf-8"/>
 	<!-- Favicons -->
 	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -34,35 +34,35 @@
 	</div>
 	
 	<!-- Modal Trigger -->
-	<a class="waves-effect waves-light btn blue" href="#modal2">Settings</a>
+	<a class="waves-effect waves-light btn blue" id="notifications" href="#modal2">Receive Notifications</a>
 
 	<!-- Modal Structure -->
 	<div id="modal2" class="modal" style="height:550px">
 		<div class="modal-content">
-			<h4>Settings</h4>
+			<h4>Receive Notifications</h4>
 			<br>
 			<p>
 				<div class="input-field col s6">
 				  <i class="material-icons prefix">add_alert</i>
-				  <input id="icon_ac_unit" type="text" class="pushoveraddress">
-				  <label for="icon_ac_unit">Pushover Address</label>
+				  <input id="pushoveraddress" type="text">
+				  <label for="pushoveraddress">Pushover Address</label>
 				</div>
 				<div class="row">
 					<div class="col s12 m5">
-						<button class="btn waves-effect waves-light blue" type="submit" name="action" id="pushover-submit" onclick="Materialize.toast('Temperature Change Sent!', 4000, 'rounded')">Submit Temperature
-							<i class="material-icons right">Add Pushover Address</i>
+						<button class="btn waves-effect waves-light blue" type="submit" name="action" id="pushover-submit" onclick="Materialize.toast('Pushover Address Added!', 4000, 'rounded')">Add Pushover Address
+							<i class="material-icons right">send</i>
 						</button>
 					</div>
 				</div>
 				<div class="input-field col s6">
 				  <i class="material-icons prefix">add_alert</i>
-				  <input id="icon_ac_unit" type="text" class="pushbulletaddress">
-				  <label for="icon_ac_unit">Pushbullet Address</label>
+				  <input id="pushbulletaddress" type="text">
+				  <label for="pushbulletaddress">Pushbullet Address</label>
 				</div>
 				<div class="row">
 					<div class="col s12 m5">
-						<button class="btn waves-effect waves-light blue" type="submit" name="action" id="pushbullet-submit" onclick="Materialize.toast('Temperature Change Sent!', 4000, 'rounded')">Submit Temperature
-							<i class="material-icons right">Add Pushbullet Address</i>
+						<button class="btn waves-effect waves-light blue" type="submit" name="action" id="pushbullet-submit" onclick="Materialize.toast('Pushbullet Address Added!', 4000, 'rounded')">Add Pushbullet Address
+							<i class="material-icons right">send</i>
 						</button>
 					</div>
 				</div>
@@ -124,7 +124,7 @@
 	<div class="input-field col s6">
 	  <i class="material-icons prefix">ac_unit</i>
 	  <input id="icon_ac_unit" type="number" class="validate">
-	  <label for="icon_ac_unit">Temperature</label>
+	  <label for="icon_ac_unit">Room Temperature</label>
 	</div>
 	<div class="row">
 		<div class="col s12 m5">

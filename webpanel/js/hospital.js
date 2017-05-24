@@ -12,8 +12,10 @@ $(function(){
 
 $('#light-submit').click(function(){
     changelight();
-	pushover();
-	pushbullet();
+	//pushover();
+	//pushbullet();
+	//sendSMS();
+	browserNotifications();
 });
 
 $('#temp-submit').click(function(){
@@ -28,14 +30,19 @@ $('#pushover-submit').click(function(){
     addpushover();
 });
 
+//$('#notifications').click(function(){
+  //  browserNotifications();
+//});
+
 var ip_address = '149.171.143.209'; //global as we need to access it in a lot of places
 var adjusting_temp = false;
+var pushbulletaddresses = ['ujyMueYTCMKsjz1Wd4g64y'];
+var pushoveraddresses = [];
 var temp_mode = 3; // 1 = fan 2 = heat 3 = off. Used to prevent excessive API calls.
 
 function changelight(){
 	var value = $('.value').text(); // get value here
 	$('#LED_content').load('http://' + ip_address + '/arduino/light/' + value);
-	console.log(ip_address);
 }
 
 function changetemp(){	
@@ -70,8 +77,8 @@ function getSensorvalue() {
 	$('#heartrate').load('http://' + ip_address+ '/arduino/heartrate'); //TODO: If bad, set in red
 	$('.lighting').load('http://' + ip_address+ '/arduino/lightstatus');
 	
-	// var value = $('.validate').text(); // get value here
-	var temp = $('.temperature').text();
+	var value = $('.validate').val(); // doctors input temperature
+	var temp = $('.temperature').text(); //actual temperature
 	if(adjusting_temp){
 		if(temp > value + 1 && temp_mode != 1){
 			temp_mode = 1;
@@ -84,6 +91,11 @@ function getSensorvalue() {
 			temp_mode = 3;
 			adjusting_temp = false;
 		}
+	}
+	
+	if($('#heartrate').text < 20 || $('#heartrate').text > 220){
+		pushbullet();
+		pushover();
 	}
 	
 	setTimeout("getSensorvalue()", delay); //Wait... Lower = less real time but lower power consumption. Tradeoff we've got to calculate. 
@@ -107,19 +119,47 @@ function pushover(){
 	  .send();
 
 	setTimeout(function () {
-	  console.log('hrere');
+	  console.log('pushover sent!');
 	}, 4000);
 }
 
 function pushbullet(){
 	PushBullet.APIKey = "o.kk9TUjrvpt4kJMhYtmJ2QIEnGCr1kq2c";
-	var res = PushBullet.push("note", "ujyMueYTCMKsjz1Wd4g64y", null, {title: "You suck", body: "Big ass"});
-	var res = PushBullet.devices();
+	for(var i = 0; i<pushbulletaddresses.length; i++){
+		var res = PushBullet.push("note", pushbulletaddresses[i], null, {title: "Title", body: "Body"}); //todo: if this fails, remove loop and replace with device id 
+	}
+
 	console.log(res);
 }
 
-function addpushbullet(){
+function addpushover(){
+	var address = $('#pushoveraddress').val();
+	pushoveraddresses.push(address);
 }
 
-function addpushover(){
+function addpushbullet(){
+	var address = $('#pushbulletaddress').val();
+	pushbulletaddresses.push(address);
 }
+
+function browserNotifications() {
+  if (Notification.permission !== "granted")
+    Notification.requestPermission();
+  else {
+    var notification = new Notification('G1Health Web Panel', {
+      icon: 'img/g1health.png',
+      body: "Doctor's Attention Needed!",
+    });
+
+    notification.onclick = function () {
+      window.open("http://stackoverflow.com/a/13328397/1269037");      
+    };
+
+  }
+
+}
+
+function sendSMS(){ //working - perhaps paramatise SMS number and/or message
+	$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=61402565010&from=G1Health&text=Alert:+Patient+Needs+Attention");
+}
+

@@ -193,4 +193,7 @@ input[type="range"]{
 .input-field .prefix.active {
  color: #2196f3 ;
 }
-        
+
+#pushover-submit{
+	margin-bottom:10px;
+}
