@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
@@ -14,7 +13,7 @@ $('#light-submit').click(function(){
     changelight();
 	//pushover();
 	//pushbullet();
-	//sendSMS();
+	sendSMS();
 	browserNotifications();
 });
 
@@ -30,14 +29,23 @@ $('#pushover-submit').click(function(){
     addpushover();
 });
 
+$('#phone-submit').click(function(){
+    addphone();
+});
+
 //$('#notifications').click(function(){
   //  browserNotifications();
 //});
+
+$('#alarm-submit').click(function(){
+	alarm();
+});
 
 var ip_address = '149.171.143.209'; //global as we need to access it in a lot of places
 var adjusting_temp = false;
 var pushbulletaddresses = ['ujyMueYTCMKsjz1Wd4g64y'];
 var pushoveraddresses = [];
+var phonenumbers = ['61402565010'];
 var temp_mode = 3; // 1 = fan 2 = heat 3 = off. Used to prevent excessive API calls.
 
 function changelight(){
@@ -106,32 +114,6 @@ function getTemp() {
 	setTimeout("getTemp()", 20000); //Wait... Lower = less real time but lower power consumption. Tradeoff we've got to calculate. 
 }
 
-function pushover(){
-	var client1 = new PushoverJs('adz8d4pqpc468uyp4u87m85er8qgq7', 'Q3OrKkArcluCfdWYz5kYp8jJEZA9jD'); //api token then user token
-
-	client1.createMessage()
-	  .title('Patient has got up!')
-	  .message('Patient has got up')
-	  .url('http://www.mattydb.com/uni', 'Web Panel')
-	  .highPriority()
-	  .addCurrentTime()
-	  .playSound(client1.sounds.pushover)
-	  .send();
-
-	setTimeout(function () {
-	  console.log('pushover sent!');
-	}, 4000);
-}
-
-function pushbullet(){
-	PushBullet.APIKey = "o.kk9TUjrvpt4kJMhYtmJ2QIEnGCr1kq2c";
-	for(var i = 0; i<pushbulletaddresses.length; i++){
-		var res = PushBullet.push("note", pushbulletaddresses[i], null, {title: "Title", body: "Body"}); //todo: if this fails, remove loop and replace with device id 
-	}
-
-	console.log(res);
-}
-
 function addpushover(){
 	var address = $('#pushoveraddress').val();
 	pushoveraddresses.push(address);
@@ -142,24 +124,70 @@ function addpushbullet(){
 	pushbulletaddresses.push(address);
 }
 
-function browserNotifications() {
+function addphone(){
+	var address = $('#phonenumber').val();
+	phonenumbers.push(address);
+}
+
+function browserNotifications(message) {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
     var notification = new Notification('G1Health Web Panel', {
       icon: 'img/g1health.png',
-      body: "Doctor's Attention Needed!",
+      body: message,
     });
 
     notification.onclick = function () {
-      window.open("http://stackoverflow.com/a/13328397/1269037");      
+      window.open("file:///C:/Users/akkat/Documents/workspace/SmarterHospital/webpanel/index.html");      
     };
-
   }
-
 }
 
-function sendSMS(){ //working - perhaps paramatise SMS number and/or message
-	$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=61402565010&from=G1Health&text=Alert:+Patient+Needs+Attention");
+function pushbullet(message){
+	PushBullet.APIKey = "o.kk9TUjrvpt4kJMhYtmJ2QIEnGCr1kq2c";
+	for(var i = 0; i<pushbulletaddresses.length; i++){
+		var res = PushBullet.push("note", pushbulletaddresses[i], null, {title: "G1Health Notifications", body: message}); //todo: if this fails, remove loop and replace with device id 
+	}
+
+	console.log(res);
 }
 
+function sendSMS(message){ //working - perhaps paramatise SMS number and/or message
+	if(message === "alarm"){
+		for(var i =0; i<phonenumbers.length; i++){
+			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health+Notifications&text=Alarm+Triggered!");
+		}
+	}else if(reason === "heartrate"){
+		for(var i =0; i<phonenumbers.length; i++){
+			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health+Notifications&text=Alert:+Patient+in+critical+status!");
+		}
+	}
+}
+
+function pushover(message){
+	for(var i = 0; i < pushoveraddresses.lenght; i++){
+		var client1 = new PushoverJs('adz8d4pqpc468uyp4u87m85er8qgq7', 'Q3OrKkArcluCfdWYz5kYp8jJEZA9jD'); //api token then user token
+
+		client1.createMessage()
+		  .title("G1Health Notifications")
+		  .message(message)
+		  .url('http://www.mattydb.com/uni', 'Web Panel')
+		  .highPriority()
+		  .addCurrentTime()
+		  .playSound(client1.sounds.pushover)
+		  .send();
+
+		setTimeout(function () {
+		  console.log('pushover sent!');
+		}, 4000);
+	}
+}
+
+function alarm(){
+	sendSMS("alarm");
+	pushover("Alarm Triggered");
+	pushbullet("Alarm Triggered");
+	browserNotifications("Alarm Triggered");
+	$.get("http://" + ip_address + "/arduino/alarm");
+}

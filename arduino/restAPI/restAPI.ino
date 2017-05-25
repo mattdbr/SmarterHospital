@@ -13,14 +13,19 @@ long hits = 0;
 
 //  Variables
 int pulsePin = A0;                 // Pulse Sensor purple wire connected to analog pin 0
-int ledPin = 6;                   //for lights
-int fanPin = 12;
-int heatPin = 9;
-int tempPin = A3;
 int fsrPin = A2;                   // the FSR and 10K pulldown are connected to a0
+int alarmPin = 3;
+int tempPin = A3;
+int lightSensor = A4;
+int buttonPin = A5;
+int ledPin = 6;                   //for lights
+int fanPin = 11;
+int heatPin = 12;
 int fsrthreshold = 200;
 int fsrReading;
-int lightSensor = A4;
+int value;
+int ispressed = 0; 
+
   
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
@@ -53,6 +58,7 @@ void setup() {
   pinMode(13, OUTPUT);
   pinMode(fanPin, OUTPUT);
   pinMode(heatPin, OUTPUT);
+  pinMode(alarmPin, OUTPUT);
   digitalWrite(13, LOW);
   digitalWrite(13, HIGH);
 
@@ -171,7 +177,10 @@ ISR(TIMER1_COMPA_vect) {                        // triggered when Timer2 counts 
 void loop() {
   // Get clients coming from server
   BridgeClient client = server.accept();
-
+  int value = analogRead(buttonPin);
+    if(value != 0){
+      ispressed = 1;
+  }
   // There is a new client?
   if (client) {
     // read the command
@@ -203,10 +212,14 @@ void loop() {
   if (command == "lightstatus"){
      readLight(client);
   }
+  if (command == "alarm"){
+     alarm(client);
+  }
+  if (command == "button"){
+    pushButton(client);  
+  }
     client.stop();
   }
-  
-
   delay(50); // Poll every 50ms
 }
 
@@ -277,8 +290,28 @@ void turnTempOff(BridgeClient client){
 }
 
 void readLight(BridgeClient client){
-  
   float value = analogRead(lightSensor);
   float light = value*(255.0/1023.0);
   client.print(value);  
 }
+
+void pushButton(BridgeClient client){         //add in the loop 
+  if (value != 0){
+    client.print("On");
+    ispressed = 0;
+  }else{
+    client.print("On");
+  }
+}
+
+void alarm(BridgeClient client){            //add in the loop
+  int i = 0; 
+  while (i <= 5){
+    analogWrite(alarmPin, 255);
+    delay(1000);
+    analogWrite(alarmPin, 127);
+    delay(1000);
+    i++; 
+  }
+}
+
