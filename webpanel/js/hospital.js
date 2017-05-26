@@ -41,7 +41,7 @@ $('#alarm-submit').click(function(){
 	alarm();
 });
 
-var ip_address = '149.171.143.209'; //global as we need to access it in a lot of places
+var ip_address = '149.171.143.166'; //global as we need to access it in a lot of places
 var adjusting_temp = false;
 var pushbulletaddresses = ['ujyMueYTCMKsjz1Wd4g64y'];
 var pushoveraddresses = [];
@@ -54,8 +54,7 @@ function changelight(){
 }
 
 function changetemp(){	
-	adjusting_temp = true;
-	console.log(value);
+	adjusting_temp = true; 	
 }
 
 
@@ -90,7 +89,7 @@ function getSensorvalue() {
 	if(adjusting_temp){
 		if(temp > value + 1 && temp_mode != 1){
 			temp_mode = 1;
-			$('#action').load('http://' + ip_address + '/arduino/fan' + value);
+			$('#action').load('http://' + ip_address + '/arduino/fan/' + '255');
 		}else if(temp < value - 1 && temp_mode != 2){
 			temp_mode = 2;
 			$('#action').load('http://' + ip_address + '/arduino/heat');
@@ -154,11 +153,11 @@ function pushbullet(message){
 }
 
 function sendSMS(message){ //working - perhaps paramatise SMS number and/or message
-	if(message === "alarm"){
+	if(message == "alarm"){
 		for(var i =0; i<phonenumbers.length; i++){
 			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health+Notifications&text=Alarm+Triggered!");
 		}
-	}else if(reason === "heartrate"){
+	}else if(reason == "heartrate"){
 		for(var i =0; i<phonenumbers.length; i++){
 			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health+Notifications&text=Alert:+Patient+in+critical+status!");
 		}

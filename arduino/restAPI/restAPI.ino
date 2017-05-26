@@ -9,9 +9,17 @@ String startString;
 long hits = 0;
 //int lightpin = 6;
 
-
-
 //  Variables
+// These constants won't change.  They're used to give names
+// to the pins used:
+const int sensorInPin = A0;  // Pin reading sensorin
+const int sensorOutPin = A5; // Pin reading sensorout
+
+int Sensorin = 0;        // value read from the sensor inside room
+int Sensorout = 0;        //value read from sensor outside room
+int startinglightin = analogRead(sensorInPin);        //starting light level of sensorin
+int startinglightout = analogRead(sensorOutPin);      //starting light level of sensorout
+int occupant = 1;
 int pulsePin = A0;                 // Pulse Sensor purple wire connected to analog pin 0
 int fsrPin = A2;                   // the FSR and 10K pulldown are connected to a0
 int alarmPin = 3;
@@ -220,6 +228,18 @@ void loop() {
   }
     client.stop();
   }
+  Sensorin = analogRead(sensorInPin);
+  Sensorout = analogRead(sensorOutPin);
+  if (Sensorout < startinglightout) {
+    if (Sensorin < startinglightin) {
+      occupant++;
+    }
+  }
+  if (Sensorin < startinglightin) {
+    if (Sensorout < startinglightout) {
+      occupant--;
+    }
+  }
   delay(50); // Poll every 50ms
 }
 
@@ -260,6 +280,9 @@ void light(BridgeClient client) {
   analogWrite(lightpin, value);*/
   //playing it safe
   analogWrite(ledPin, value);
+  delay(1000);
+  Sensorin = analogRead(sensorInPin);
+  Sensorout = analogRead(sensorOutPin);
 }
 
 void cooling(BridgeClient client){
@@ -306,12 +329,13 @@ void pushButton(BridgeClient client){         //add in the loop
 
 void alarm(BridgeClient client){            //add in the loop
   int i = 0; 
-  while (i <= 5){
+  while (i <= 7){
     analogWrite(alarmPin, 255);
     delay(1000);
     analogWrite(alarmPin, 127);
     delay(1000);
     i++; 
   }
+  analogWrite(alarmPin, 0);
 }
 
