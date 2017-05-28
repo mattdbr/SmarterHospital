@@ -47,6 +47,11 @@ var pushbulletaddresses = ['ujyMueYTCMKsjz1Wd4g64y'];
 var pushoveraddresses = [];
 var phonenumbers = ['61402565010'];
 var temp_mode = 3; // 1 = fan 2 = heat 3 = off. Used to prevent excessive API calls.
+var adjusting_temp = false;
+var value;
+var temp;
+var buttonstatus;
+
 
 function changelight(){
 	var value = $('.value').text(); // get value here
@@ -78,14 +83,19 @@ function changetemp(){
 function getSensorvalue() {
 //Every one second, this function obtains sensor values from Arduino Yun and sends to Yun
 //a request to turn LED on or off (depending on what radio button is pressed).
-	var delay = 5000; // change to affect poll interval
+	var delay = 8000; // change to affect poll interval
 	
 	$('#inBed').load('http://'+ ip_address + '/arduino/onbed'); //TODO: If not in bed, set in red. API should return "in bed" or "not in bed"
 	$('#heartrate').load('http://' + ip_address+ '/arduino/heartrate'); //TODO: If bad, set in red
 	$('.lighting').load('http://' + ip_address+ '/arduino/lightstatus');
-	
-	var value = $('.validate').val(); // doctors input temperature
-	var temp = $('.temperature').text(); //actual temperature
+	$('.occupancy').load('http://' + ip_address+ '/arduino/occupancy');
+	$('#pushbutton').load('http://' + ip_address+ '/arduino/button');
+	buttonstatus = $('#pushbutton').val(); // doctors input temperature
+	if(buttonstatus == "On"){
+		alarm();
+	}
+	value = $('.validate').val(); // doctors input temperature
+	temp = parseInt($('.temperature').text()); //actual temperature
 	if(adjusting_temp){
 		if(temp > value + 1 && temp_mode != 1){
 			temp_mode = 1;
@@ -93,7 +103,7 @@ function getSensorvalue() {
 		}else if(temp < value - 1 && temp_mode != 2){
 			temp_mode = 2;
 			$('#action').load('http://' + ip_address + '/arduino/heat');
-		}else if(temp_mode != 3){
+		}else if((temp < value + 1 && temp > value - 1) && temp_mode != 3){
 			$('#action').load('http://' + ip_address + '/arduino/off');
 			temp_mode = 3;
 			adjusting_temp = false;

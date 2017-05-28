@@ -104,6 +104,14 @@
 				</div>
 		</div>
 	</div>
+	<div style="position:relative;min-width:960px;margin-top:250px">
+		<div class="card blue-grey darken-1" style="position:absolute;right:0;top:0">
+				<div class="card-content white-text">
+					<span class="card-title">Current Occupancy:</span>
+					<p>People: <span class="occupancy"></span></p>
+				</div>
+		</div>
+	</div>
 	<img src="img/g1health.png"></img>
 	<br>
 
@@ -160,10 +168,15 @@
 	<a class="btn btn-floating pulse blue"><i class="material-icons">favorite_border</i></a> <!-- should this be favourite or local_hospital or favorite_border-->
 	<b>Heartrate: </b>
 	<span id="heartrate"></span>
+	<br>
+	<br>
+	<a class="btn btn-floating blue"><i class="material-icons">alarm</i></a> <!-- should this be favourite or local_hospital or favorite_border-->
+	<b>Patient Alarm: </b>
+	<span id="pushbutton"></span>
 	
 	<!-- <div id="sensor_content">Loading data from Arduino...</div> --> 
 	
-	<div id="LED_content_test"></div>
+	<div id = "action"></div>
 	
 	<!--For if we want to selectively refresh -- I think that automatic is better-->
 	

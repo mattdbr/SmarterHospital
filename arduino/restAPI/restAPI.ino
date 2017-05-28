@@ -12,7 +12,7 @@ long hits = 0;
 //  Variables
 // These constants won't change.  They're used to give names
 // to the pins used:
-const int sensorInPin = A0;  // Pin reading sensorin
+const int sensorInPin = A1;  // Pin reading sensorin
 const int sensorOutPin = A5; // Pin reading sensorout
 
 int Sensorin = 0;        // value read from the sensor inside room
@@ -29,7 +29,7 @@ int buttonPin = A5;
 int ledPin = 6;                   //for lights
 int fanPin = 11;
 int heatPin = 12;
-int fsrthreshold = 200;
+int fsrthreshold = 800;
 int fsrReading;
 int value;
 int ispressed = 0; 
@@ -48,7 +48,7 @@ volatile unsigned long sampleCounter = 0;          // used to determine pulse ti
 volatile unsigned long lastBeatTime = 0;           // used to find IBI
 volatile int P = 512;                     // used to find peak in pulse wave, seeded
 volatile int T = 512;                    // used to find trough in pulse wave, seeded
-volatile int thresh = 530;                // used to find instant moment of heart beat, seeded
+volatile int thresh = 500;                // used to find instant moment of heart beat, seeded
 volatile int amp = 0;                   // used to hold amplitude of pulse waveform, seeded
 volatile boolean firstBeat = true;        // used to seed rate array so we startup with reasonable BPM
 volatile boolean secondBeat = false;      // used to seed rate array so we startup with reasonable BPM
@@ -170,7 +170,7 @@ ISR(TIMER1_COMPA_vect) {                        // triggered when Timer2 counts 
   }
 
   if (N > 2500) {                          // if 2.5 seconds go by without a beat
-    thresh = 530;                          // set thresh default
+    thresh = 500;                          // set thresh default
     P = 512;                               // set P default
     T = 512;                               // set T default
     lastBeatTime = sampleCounter;          // bring the lastBeatTime up to date
@@ -225,6 +225,9 @@ void loop() {
   }
   if (command == "button"){
     pushButton(client);  
+  }
+  if (command == "occupancy"){
+    levels(client);
   }
     client.stop();
   }
@@ -323,8 +326,12 @@ void pushButton(BridgeClient client){         //add in the loop
     client.print("On");
     ispressed = 0;
   }else{
-    client.print("On");
+    client.print("Off");
   }
+}
+
+void levels(BridgeClient client){         //add in the loop 
+  client.print(occupant);
 }
 
 void alarm(BridgeClient client){            //add in the loop
