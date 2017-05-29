@@ -87,6 +87,29 @@
 	<button class="btn waves-effect waves-light red" type="submit" name="action" id="alarm-submit" onclick="Materialize.toast('Alarm request sent!', 4000, 'rounded')">Alarm
 				<i class="material-icons left">warning</i>
 	</button>
+	<!-- Modal Trigger -->
+	<a class="waves-effect waves-light btn blue" href="#modal1">Patient Info</a>
+
+	<!-- Modal Structure -->
+	<div id="modal1" class="modal">
+		<div class="modal-content">
+			<h4>Room 111: Nikola Tesla</h4>
+			<img src="img/tesla.png" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+			<p><b>Age:</b> 160
+			<br><b>Blood Type: </b> AB
+			<br><b>Conditions: </b> Asthmatic
+			<br><b>Status: </b> Recovery - MRI results pending
+			<br>
+			<br>
+			<b>Notes:</b>
+			<textarea></textarea>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+		</div>
+	</div>
+	<span class="clock"></span>
+	
 	
 	<div style="position:relative;min-width:960px;margin-top:-70px">
 		<div class="card blue-grey darken-1" style="position:absolute;right:0;top:0">
