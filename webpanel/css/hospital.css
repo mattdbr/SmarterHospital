@@ -201,3 +201,9 @@ input[type="range"]{
 .circle{
 	margin-top:20px;
 }
+
+.clock{
+	padding-left:90px;
+	font-size:30px;
+	font-weight:strong;
+}

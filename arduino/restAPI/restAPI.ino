@@ -194,6 +194,7 @@ void loop() {
     // read the command
     String command = client.readStringUntil('/');
     command.trim();        //kill whitespace
+	client.println("Access-Control-Allow-Origin: *"); 
     SerialUSB.println(command);
     // is "temperature" command?
     if (command == "onbed") {

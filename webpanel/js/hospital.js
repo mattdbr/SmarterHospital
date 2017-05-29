@@ -11,9 +11,9 @@ $(function(){
 
 $('#light-submit').click(function(){
     changelight();
-	//pushover();
-	//pushbullet();
-	sendSMS();
+	pushover();
+	pushbullet();
+	//sendSMS();
 	browserNotifications();
 });
 
@@ -44,7 +44,7 @@ $('#alarm-submit').click(function(){
 var ip_address = '149.171.143.166'; //global as we need to access it in a lot of places
 var adjusting_temp = false;
 var pushbulletaddresses = ['ujyMueYTCMKsjz1Wd4g64y'];
-var pushoveraddresses = [];
+var pushoveraddresses = ['Q3OrKkArcluCfdWYz5kYp8jJEZA9jD'];
 var phonenumbers = ['61402565010'];
 var temp_mode = 3; // 1 = fan 2 = heat 3 = off. Used to prevent excessive API calls.
 var adjusting_temp = false;
@@ -61,24 +61,6 @@ function changelight(){
 function changetemp(){	
 	adjusting_temp = true; 	
 }
-
-
-/*function sliderInit() {
-	var slider = $('.range-slider'),
-		range = $('.range-slider__range'),
-		value = $('.range-slider__value');
-	
-		slider.each(function(){
-		value.each(function(){
-		var value = $(this).prev().attr('value');
-		$(this).html(value);
-		});
-
-			range.on('input', function(){
-				$(this).next(value).html(this.value);
-			});
-		});
-}*/
 
 function getSensorvalue() {
 //Every one second, this function obtains sensor values from Arduino Yun and sends to Yun
@@ -110,9 +92,12 @@ function getSensorvalue() {
 		}
 	}
 	
+	$('.temperature').text()
+	
 	if($('#heartrate').text < 20 || $('#heartrate').text > 220){
-		pushbullet();
-		pushover();
+		pushbullet("heart");
+		pushover("heart");
+		sendSMS("heart");
 	}
 	
 	setTimeout("getSensorvalue()", delay); //Wait... Lower = less real time but lower power consumption. Tradeoff we've got to calculate. 
@@ -142,10 +127,17 @@ function browserNotifications(message) {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
-    var notification = new Notification('G1Health Web Panel', {
-      icon: 'img/g1health.png',
-      body: message,
-    });
+	if(message == "heart"){
+		var notification = new Notification('G1Health Web Panel', {
+		icon: 'img/g1health.png',
+		body: "Patient's heart rate is critical",
+		});
+	}else if(message == "alarm"){
+		var notification = new Notification('G1Health Web Panel', {
+		icon: 'img/g1health.png',
+		body: 'An alarm has been triggered',
+		});
+	}
 
     notification.onclick = function () {
       window.open("file:///C:/Users/akkat/Documents/workspace/SmarterHospital/webpanel/index.html");      
@@ -155,8 +147,14 @@ function browserNotifications(message) {
 
 function pushbullet(message){
 	PushBullet.APIKey = "o.kk9TUjrvpt4kJMhYtmJ2QIEnGCr1kq2c";
-	for(var i = 0; i<pushbulletaddresses.length; i++){
-		var res = PushBullet.push("note", pushbulletaddresses[i], null, {title: "G1Health Notifications", body: message}); //todo: if this fails, remove loop and replace with device id 
+	if(message=="heart"){
+		for(var i = 0; i<pushbulletaddresses.length; i++){
+			var res = PushBullet.push("note", pushbulletaddresses[i], null, {title: "G1Health Notifications", body: "Patient's heartrate is critical"}); //todo: if this fails, remove loop and replace with device id 
+		}
+	}else if(message=="alarm"){
+		for(var i = 0; i<pushbulletaddresses.length; i++){
+			var res = PushBullet.push("note", pushbulletaddresses[i], null, {title: "G1Health Notifications", body: "An alarm has been triggered!"}); //todo: if this fails, remove loop and replace with device id 
+		}
 	}
 
 	console.log(res);
@@ -165,39 +163,57 @@ function pushbullet(message){
 function sendSMS(message){ //working - perhaps paramatise SMS number and/or message
 	if(message == "alarm"){
 		for(var i =0; i<phonenumbers.length; i++){
-			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health+Notifications&text=Alarm+Triggered!");
+			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health&text=Alarm+Triggered!");
 		}
-	}else if(reason == "heartrate"){
+	}else if(message == "heart"){
 		for(var i =0; i<phonenumbers.length; i++){
-			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health+Notifications&text=Alert:+Patient+in+critical+status!");
+			$.get("https://rest.nexmo.com/sms/json?api_key=7564b86f&api_secret=d95e62acfc5bc072&to=" + phonenumbers[i] + "&from=G1Health&text=Alert:+Patient+in+critical+status!");
 		}
 	}
 }
 
 function pushover(message){
-	for(var i = 0; i < pushoveraddresses.lenght; i++){
-		var client1 = new PushoverJs('adz8d4pqpc468uyp4u87m85er8qgq7', 'Q3OrKkArcluCfdWYz5kYp8jJEZA9jD'); //api token then user token
+	if(message=="heart"){
+		for(var i = 0; i < pushoveraddresses.length; i++){
+			var client1 = new PushoverJs('adz8d4pqpc468uyp4u87m85er8qgq7', pushoveraddresses[i]); //api token then user token
 
-		client1.createMessage()
-		  .title("G1Health Notifications")
-		  .message(message)
-		  .url('http://www.mattydb.com/uni', 'Web Panel')
-		  .highPriority()
-		  .addCurrentTime()
-		  .playSound(client1.sounds.pushover)
-		  .send();
+			client1.createMessage()
+			  .title("G1Health Notifications")
+			  .message("Patient's Heart rate is critical!")
+			  .url('http://www.mattydb.com/uni', 'Web Panel')
+			  .highPriority()
+			  .addCurrentTime()
+			  .playSound(client1.sounds.pushover)
+			  .send();
 
-		setTimeout(function () {
-		  console.log('pushover sent!');
-		}, 4000);
-	}
+			setTimeout(function () {
+			  console.log('pushover sent!');
+			}, 4000);
+		}
+	}else if(message=="alarm"){
+		for(var i = 0; i < pushoveraddresses.length; i++){
+			var client1 = new PushoverJs('adz8d4pqpc468uyp4u87m85er8qgq7', pushoveraddresses[i]); //api token then user token
+
+			client1.createMessage()
+			  .title("G1Health Notifications")
+			  .message("An alarm has been triggered!")
+			  .url('http://www.mattydb.com/uni', 'Web Panel')
+			  .highPriority()
+			  .addCurrentTime()
+			  .playSound(client1.sounds.pushover)
+			  .send();
+
+			setTimeout(function () {
+			  console.log('pushover sent!');
+			}, 4000);
+		}
 }
 
 function alarm(){
 	sendSMS("alarm");
-	pushover("Alarm Triggered");
-	pushbullet("Alarm Triggered");
-	browserNotifications("Alarm Triggered");
+	pushover("alarm");
+	pushbullet("alarm");
+	browserNotifications("alarm");
 	$.get("http://" + ip_address + "/arduino/alarm");
 }
 
