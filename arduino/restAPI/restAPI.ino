@@ -185,16 +185,12 @@ ISR(TIMER1_COMPA_vect) {                        // triggered when Timer2 counts 
 void loop() {
   // Get clients coming from server
   BridgeClient client = server.accept();
-  int value = analogRead(buttonPin);
-    if(value != 0){
-      ispressed = 1;
-  }
   // There is a new client?
   if (client) {
     // read the command
     String command = client.readStringUntil('/');
     command.trim();        //kill whitespace
-	client.println("Access-Control-Allow-Origin: *"); 
+	//client.println("Access-Control-Allow-Origin: *"); 
     SerialUSB.println(command);
     // is "temperature" command?
     if (command == "onbed") {
@@ -323,12 +319,12 @@ void readLight(BridgeClient client){
 }
 
 void pushButton(BridgeClient client){         //add in the loop 
-  if (value != 0){
-    client.print("On");
-    ispressed = 0;
-  }else{
-    client.print("Off");
+  int value = analogRead(buttonPin);
+    if(value != 0){
+      ispressed = 1;
   }
+  client.println(ispressed);
+  ispressed = 0;
 }
 
 void levels(BridgeClient client){         //add in the loop 
@@ -346,4 +342,5 @@ void alarm(BridgeClient client){            //add in the loop
   }
   analogWrite(alarmPin, 0);
 }
+
 

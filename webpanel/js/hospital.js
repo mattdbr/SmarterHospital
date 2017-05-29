@@ -41,7 +41,7 @@ $('#alarm-submit').click(function(){
 	alarm();
 });
 
-var ip_address = '149.171.143.166'; //global as we need to access it in a lot of places
+var ip_address = '149.171.143.227'; //global as we need to access it in a lot of places
 var adjusting_temp = false;
 var pushbulletaddresses = ['ujyMueYTCMKsjz1Wd4g64y'];
 var pushoveraddresses = ['Q3OrKkArcluCfdWYz5kYp8jJEZA9jD'];
@@ -73,7 +73,7 @@ function getSensorvalue() {
 	$('.occupancy').load('http://' + ip_address+ '/arduino/occupancy');
 	$('#pushbutton').load('http://' + ip_address+ '/arduino/button');
 	buttonstatus = $('#pushbutton').val(); // doctors input temperature
-	if(buttonstatus == "On"){
+	if(buttonstatus == "1"){
 		alarm();
 	}
 	value = $('.validate').val(); // doctors input temperature
@@ -207,6 +207,7 @@ function pushover(message){
 			  console.log('pushover sent!');
 			}, 4000);
 		}
+	}
 }
 
 function alarm(){
