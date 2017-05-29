@@ -29,7 +29,7 @@ int buttonPin = A5;
 int ledPin = 6;                   //for lights
 int fanPin = 11;
 int heatPin = 12;
-int fsrthreshold = 800;
+int fsrthreshold = 5;
 int fsrReading;
 int value;
 int ispressed = 0; 
@@ -190,28 +190,28 @@ void loop() {
     // read the command
     String command = client.readStringUntil('/');
     command.trim();        //kill whitespace
-	//client.println("Access-Control-Allow-Origin: *"); 
+  //client.println("Access-Control-Allow-Origin: *"); 
     SerialUSB.println(command);
     // is "temperature" command?
     if (command == "onbed") {
       onBed(client);
     }
-	if (command == "heartrate") {
+  if (command == "heartrate") {
       heartRate(client);
     }
-	if (command == "light") {    //Lighting api should be url/light/value 
+  if (command == "light") {    //Lighting api should be url/light/value 
       light(client);
     }
-	if (command == "fan"){
+  if (command == "fan"){
       cooling(client);
     }
-	if (command == "heat"){
+  if (command == "heat"){
       heating(client);
     }
-	if (command == "off"){
+  if (command == "off"){
       turnTempOff(client);
     }
-	if (command == "temp"){
+  if (command == "temp"){
       currentTemp(client);
     }
   if (command == "lightstatus"){
@@ -342,5 +342,3 @@ void alarm(BridgeClient client){            //add in the loop
   }
   analogWrite(alarmPin, 0);
 }
-
-

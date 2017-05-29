@@ -21,6 +21,10 @@ $('#temp-submit').click(function(){
     changetemp();
 });
 
+$('#temp-off').click(function(){
+    tempoff();
+});
+
 $('#pushbullet-submit').click(function(){
     addpushbullet();
 });
@@ -72,9 +76,10 @@ function getSensorvalue() {
 	$('.lighting').load('http://' + ip_address+ '/arduino/lightstatus');
 	$('.occupancy').load('http://' + ip_address+ '/arduino/occupancy');
 	$('#pushbutton').load('http://' + ip_address+ '/arduino/button');
-	buttonstatus = $('#pushbutton').val(); // doctors input temperature
+	buttonstatus = $('#pushbutton').text(); // doctors input temperature
 	if(buttonstatus == "1"){
 		alarm();
+		alert("Patient Triggered Alarm!");
 	}
 	value = $('.validate').val(); // doctors input temperature
 	temp = parseInt($('.temperature').text()); //actual temperature
@@ -211,11 +216,15 @@ function pushover(message){
 }
 
 function alarm(){
-	sendSMS("alarm");
+	//sendSMS("alarm");
 	pushover("alarm");
 	pushbullet("alarm");
 	browserNotifications("alarm");
 	$.get("http://" + ip_address + "/arduino/alarm");
+}
+
+function tempoff(){
+	$('#action').load('http://' + ip_address + '/arduino/off');
 }
 
 function clock() {// We create a new Date object and assign it to a variable called "time".

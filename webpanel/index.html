@@ -34,7 +34,7 @@
 	</div>
 	
 	<!-- Modal Trigger -->
-	<a class="waves-effect waves-light btn blue" id="notifications" href="#modal2">Receive Notifications</a>
+	<a class="waves-effect waves-light btn blue" id="notifications" href="#modal2">Settings</a>
 
 	<!-- Modal Structure -->
 	<div id="modal2" class="modal" style="height:550px">
@@ -79,6 +79,10 @@
 					</div>
 				</div>
 			</p>
+			<h4>Temperature Control</h4>
+			<button class="btn waves-effect waves-light red" type="submit" name="action" id="temp-off" onclick="Materialize.toast('Temperature control turned off!', 4000, 'rounded')">Turn off temperature control
+			<i class="material-icons right">send</i>
+			</button>
 		</div>
 		<div class="modal-footer">
 			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
@@ -88,10 +92,10 @@
 				<i class="material-icons left">warning</i>
 	</button>
 	<!-- Modal Trigger -->
-	<a class="waves-effect waves-light btn blue" href="#modal1">Patient Info</a>
+	<a class="waves-effect waves-light btn blue" href="#modal4">Patient Info</a>
 
 	<!-- Modal Structure -->
-	<div id="modal1" class="modal">
+	<div id="modal4" class="modal">
 		<div class="modal-content">
 			<h4>Room 111: Nikola Tesla</h4>
 			<img src="img/tesla.png" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
