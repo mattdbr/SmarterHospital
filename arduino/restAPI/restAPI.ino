@@ -12,8 +12,8 @@ long hits = 0;
 //  Variables
 // These constants won't change.  They're used to give names
 // to the pins used:
-const int sensorInPin = A1;  // Pin reading sensorin
-const int sensorOutPin = A5; // Pin reading sensorout
+const int sensorInPin = A1; 
+const int sensorOutPin = A6;
 
 int Sensorin = 0;        // value read from the sensor inside room
 int Sensorout = 0;        //value read from sensor outside room
@@ -320,10 +320,10 @@ void readLight(BridgeClient client){
 
 void pushButton(BridgeClient client){         //add in the loop 
   int value = analogRead(buttonPin);
-    if(value != 0){
+    if(value >= 900){
       ispressed = 1;
-  }
-  client.println(ispressed);
+    }
+  client.print(ispressed);
   ispressed = 0;
 }
 

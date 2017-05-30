@@ -11,10 +11,6 @@ $(function(){
 
 $('#light-submit').click(function(){
     changelight();
-	pushover();
-	pushbullet();
-	//sendSMS();
-	browserNotifications();
 });
 
 $('#temp-submit').click(function(){
@@ -84,7 +80,7 @@ function getSensorvalue() {
 	value = $('.validate').val(); // doctors input temperature
 	temp = parseInt($('.temperature').text()); //actual temperature
 	if(adjusting_temp){
-		if(temp > value + 1 && temp_mode != 1){
+		if(temp > (value + 1) && temp_mode != 1){
 			temp_mode = 1;
 			$('#action').load('http://' + ip_address + '/arduino/fan/' + '255');
 		}else if(temp < value - 1 && temp_mode != 2){
@@ -96,8 +92,6 @@ function getSensorvalue() {
 			adjusting_temp = false;
 		}
 	}
-	
-	$('.temperature').text()
 	
 	if($('#heartrate').text < 20 || $('#heartrate').text > 220){
 		pushbullet("heart");
@@ -216,7 +210,7 @@ function pushover(message){
 }
 
 function alarm(){
-	//sendSMS("alarm");
+	sendSMS("alarm");
 	pushover("alarm");
 	pushbullet("alarm");
 	browserNotifications("alarm");
