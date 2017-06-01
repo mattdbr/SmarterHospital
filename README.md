@@ -8,3 +8,10 @@ Contains all the code for the web interface. Jquery handles API calling. NB that
 
 # Arduino
 Contains Arduino code that is uploaded onto the Arduino. 
+
+# CSS
+This web panel uses the Materialize CSS framework
+
+# JS Libraries
+This repository uses PushoverJS (avaliable from https://github.com/rniemand/PushoverJS) as well as Alex Scneider's Pushbullet JS.
+Both are used freely under the MIT licence. 
