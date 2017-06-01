@@ -1,3 +1,5 @@
+//heartrate code adapted from https://github.com/WorldFamousElectronics/PulseSensor_Amped_Arduino
+
 #include <Bridge.h>
 #include <BridgeServer.h>
 #include <BridgeClient.h>
