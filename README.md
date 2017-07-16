@@ -10,6 +10,8 @@ The project utilises an Arduino Yun which operates as the "brains". The webpanel
 3. Change the API keys and IP address of the Yun in the webpanel's code where necessary. 
 4. Open the webpanel
 
+TODO: Note the ports for each sensor here. 
+
 # Webpanel
 Contains all the code for the web interface. Jquery handles API calling. NB that a browser with CORS extension is needed if running locally
 (Otherwise a properly configured server can do the trick)
