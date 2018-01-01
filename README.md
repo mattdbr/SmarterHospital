@@ -7,7 +7,7 @@ The project utilises an Arduino Yun which operates as the "brains". The webpanel
 
 1. Clone this repo
 2. Upload restAPI.ino to an Arduino Yun that is connected to the same network as your computer.
-3. Change the API keys and IP address of the Yun in the webpanel's code where necessary. 
+3. Add API keys and IP address of the Yun in the webpanel's code where necessary. 
 4. Open the webpanel
 
 TODO: Note the ports for each sensor here. 
