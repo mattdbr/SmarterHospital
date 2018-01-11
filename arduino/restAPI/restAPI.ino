@@ -14,7 +14,7 @@ long hits = 0;
 //  Variables
 // These constants won't change.  They're used to give names
 // to the pins used:
-const int sensorInPin = A1; 
+const int sensorInPin = A1;
 const int sensorOutPin = A6;
 
 int Sensorin = 0;        // value read from the sensor inside room
@@ -34,9 +34,9 @@ int heatPin = 12;
 int fsrthreshold = 5;
 int fsrReading;
 int value;
-int ispressed = 0; 
+int ispressed = 0;
 
-  
+
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
 volatile int Signal;                // holds the incoming raw data
@@ -192,7 +192,7 @@ void loop() {
     // read the command
     String command = client.readStringUntil('/');
     command.trim();        //kill whitespace
-  //client.println("Access-Control-Allow-Origin: *"); 
+  //client.println("Access-Control-Allow-Origin: *");
     SerialUSB.println(command);
     // is "temperature" command?
     if (command == "onbed") {
@@ -201,7 +201,7 @@ void loop() {
   if (command == "heartrate") {
       heartRate(client);
     }
-  if (command == "light") {    //Lighting api should be url/light/value 
+  if (command == "light") {    //Lighting api should be url/light/value
       light(client);
     }
   if (command == "fan"){
@@ -223,7 +223,7 @@ void loop() {
      alarm(client);
   }
   if (command == "button"){
-    pushButton(client);  
+    pushButton(client);
   }
   if (command == "occupancy"){
     levels(client);
@@ -265,8 +265,8 @@ void heartRate(BridgeClient client) { //TODO: Isheeta
   if(lastBPM > 170){
     client.print(0);
   }else{
-    client.print(lastBPM); 
-  }  
+    client.print(lastBPM);
+  }
   delay(1000);
 }
 
@@ -304,23 +304,23 @@ void currentTemp(BridgeClient client){
   int sensorValue = analogRead(tempPin);
   float voltage = sensorValue * (5000.0f / 1024.0f);
   float temperature = (voltage - 500.0f) / 10.0f;
-  
-  client.print(temperature); 
+
+  client.print(temperature);
 }
 
-void turnTempOff(BridgeClient client){  
+void turnTempOff(BridgeClient client){
    analogWrite(fanPin, 0);
    digitalWrite(heatPin, LOW);
-   client.print("Nothing on"); 
+   client.print("Nothing on");
 }
 
 void readLight(BridgeClient client){
   float value = analogRead(lightSensor);
   float light = value*(255.0/1023.0);
-  client.print(value);  
+  client.print(value);
 }
 
-void pushButton(BridgeClient client){         //add in the loop 
+void pushButton(BridgeClient client){         //add in the loop
   int value = analogRead(buttonPin);
     if(value >= 900){
       ispressed = 1;
@@ -329,18 +329,18 @@ void pushButton(BridgeClient client){         //add in the loop
   ispressed = 0;
 }
 
-void levels(BridgeClient client){         //add in the loop 
+void levels(BridgeClient client){         //add in the loop
   client.print(occupant);
 }
 
 void alarm(BridgeClient client){            //add in the loop
-  int i = 0; 
+  int i = 0;
   while (i <= 7){
     analogWrite(alarmPin, 255);
     delay(1000);
     analogWrite(alarmPin, 127);
     delay(1000);
-    i++; 
+    i++;
   }
   analogWrite(alarmPin, 0);
 }
